@@ -1,0 +1,59 @@
+{
+  "source": "Dockerfile-Security-Linter/sample_dockerfiles/insecure_example/Dockerfile",
+  "summary": {
+    "high": 5,
+    "medium": 2,
+    "low": 0
+  },
+  "findings": [
+    {
+      "severity": "MEDIUM",
+      "line": null,
+      "instruction": "USER",
+      "reason": "No USER instruction in the final stage (or it's explicitly root) — the container runs as root by default, widening the blast radius of a container-escape or RCE vulnerability.",
+      "recommendation": "Add a dedicated non-root USER before the final CMD/ENTRYPOINT."
+    },
+    {
+      "severity": "MEDIUM",
+      "line": 1,
+      "instruction": "FROM",
+      "reason": "Base image \"node\" is unpinned (no tag, or \":latest\") — the image can change unexpectedly between builds, breaking reproducibility and supply-chain traceability.",
+      "recommendation": "Pin to a specific version tag or, better, a content digest (@sha256:...)."
+    },
+    {
+      "severity": "HIGH",
+      "line": 3,
+      "instruction": "RUN",
+      "reason": "Pipes a remotely fetched script directly into a shell with no integrity check — a compromised download or MITM runs arbitrary code during the build.",
+      "recommendation": "Download to a file, verify its checksum/signature, then execute — or vendor the script."
+    },
+    {
+      "severity": "HIGH",
+      "line": 7,
+      "instruction": "ADD",
+      "reason": "ADD fetches a remote URL at build time with no checksum verification.",
+      "recommendation": "Use a RUN step with curl + checksum verification, or vendor the artifact and COPY it in."
+    },
+    {
+      "severity": "HIGH",
+      "line": 9,
+      "instruction": "ENV",
+      "reason": "ENV \"API_KEY\" bakes a secret-like value directly into an image layer — recoverable by anyone with the image via `docker history`/`docker inspect`, even from an earlier build stage.",
+      "recommendation": "Pass secrets at runtime (env var, mounted file, orchestrator secret store), or use BuildKit's `--mount=type=secret` for build-time secrets."
+    },
+    {
+      "severity": "HIGH",
+      "line": 10,
+      "instruction": "ARG",
+      "reason": "ARG \"DB_PASSWORD\" bakes a secret-like value directly into an image layer — recoverable by anyone with the image via `docker history`/`docker inspect`, even from an earlier build stage.",
+      "recommendation": "Pass secrets at runtime (env var, mounted file, orchestrator secret store), or use BuildKit's `--mount=type=secret` for build-time secrets."
+    },
+    {
+      "severity": "HIGH",
+      "line": 12,
+      "instruction": "RUN",
+      "reason": "chmod 777 grants read/write/execute to every user in the image — overly permissive.",
+      "recommendation": "Grant only the specific permission bits and ownership actually required."
+    }
+  ]
+}

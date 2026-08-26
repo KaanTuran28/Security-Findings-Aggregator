@@ -1,0 +1,45 @@
+{
+  "domain": "google.com",
+  "spf_records": [],
+  "dmarc_records": [
+    "v=DMARC1; p=reject; rua=mailto:mailauth-reports@google.com"
+  ],
+  "caa_records": [
+    {
+      "flags": 0,
+      "tag": "issue",
+      "value": "pki.goog"
+    }
+  ],
+  "dkim": {
+    "selectors_checked": [
+      "default",
+      "selector1",
+      "selector2",
+      "google",
+      "k1",
+      "s1",
+      "dkim"
+    ],
+    "selectors_found": []
+  },
+  "summary": {
+    "high": 1,
+    "medium": 0,
+    "low": 1
+  },
+  "findings": [
+    {
+      "severity": "HIGH",
+      "check": "spf_missing",
+      "reason": "No SPF record found — nothing tells receiving mail servers which hosts are authorized to send email for this domain, making it easy to spoof the From address.",
+      "recommendation": "Publish an SPF TXT record, e.g. \"v=spf1 include:_spf.example.com -all\"."
+    },
+    {
+      "severity": "LOW",
+      "check": "dkim_not_found_at_common_selectors",
+      "reason": "No DKIM record found under 7 common selector names (default, selector1, selector2, google, k1, s1, dkim). DKIM may still be configured under a non-standard selector this check doesn't know about — this is not conclusive.",
+      "recommendation": "Confirm your mail provider's actual DKIM selector and verify its TXT record resolves."
+    }
+  ]
+}

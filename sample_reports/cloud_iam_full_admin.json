@@ -1,0 +1,15 @@
+{
+  "source": "Cloud-IAM-Policy-Auditor/sample_policies/full_admin_example.json",
+  "summary": {
+    "high": 1,
+    "medium": 0
+  },
+  "findings": [
+    {
+      "severity": "HIGH",
+      "statement": "FullAdministratorAccess",
+      "reason": "Full administrator access: Action \"*\" + Resource \"*\" in a single Allow statement.",
+      "recommendation": "Scope the statement to specific actions and resource ARNs; never grant blanket \"*\"/\"*\"."
+    }
+  ]
+}

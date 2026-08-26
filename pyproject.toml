@@ -1,0 +1,23 @@
+[project]
+name = "security-findings-aggregator"
+version = "0.1.0"
+description = "Aggregates JSON findings from multiple security-scanner reports into one risk dashboard."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "T-X" }]
+dependencies = []
+
+[project.scripts]
+security-findings-aggregator = "security_findings_aggregator:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = ["security_findings_aggregator"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
